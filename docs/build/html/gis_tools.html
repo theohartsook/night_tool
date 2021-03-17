@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gis_tools module &#8212; Night Tools 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="night_tool" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-gis_tools">
+<span id="gis-tools-module"></span><h1>gis_tools module<a class="headerlink" href="#module-gis_tools" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="gis_tools.applyPixelToReal">
+<code class="sig-prename descclassname"><span class="pre">gis_tools.</span></code><code class="sig-name descname"><span class="pre">applyPixelToReal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_raster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_csv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gis_tools.applyPixelToReal" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a convenience function to transform all detections in pixel coordinates to real world coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_raster</strong> (<em>str</em>) – Filepath to a georeferenced raster.</p></li>
+<li><p><strong>input_csv</strong> (<em>str</em>) – Filepath to an input .csv with Hough detections.</p></li>
+<li><p><strong>output_csv</strong> (<em>str</em>) – Filepath to output .csv.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns 0 if file successfully created, otherwise returns 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gis_tools.detectionsFromPoints">
+<code class="sig-prename descclassname"><span class="pre">gis_tools.</span></code><code class="sig-name descname"><span class="pre">detectionsFromPoints</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_shp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsg_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EPSG:3310'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gis_tools.detectionsFromPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a convenience function for converting my Hough detections to
+polygons based off radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_csv</strong> (<em>str</em>) – Filepath to an input .csv created by Hough tools</p></li>
+<li><p><strong>ouput_shp</strong> – Filepath to desired output .shp</p></li>
+<li><p><strong>buffer_col</strong> (<em>str</em>) – Used to show what variable should be used to determine the buffer, defaults to ‘r’ (radius)</p></li>
+<li><p><strong>epsg_code</strong> (<em>str</em>) – The EPSG code of the input coordinate system, defaults to ‘EPSG:3310’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns 0 if file successfully created, otherwise returns 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gis_tools.detectionsOnDir">
+<code class="sig-prename descclassname"><span class="pre">gis_tools.</span></code><code class="sig-name descname"><span class="pre">detectionsOnDir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_real_coords.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsg_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EPSG:3310'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gis_tools.detectionsOnDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a convenience function for bulk conversion. Needs some refactoring tbh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dir</strong> (<em>str</em>) – Filepath to an input directory with .csv’s created by Hough tools</p></li>
+<li><p><strong>ouput_dir</strong> – Filepath to directory where output .shp’s will be saved.</p></li>
+<li><p><strong>csv_name</strong> (<em>str</em>) – The ending target for .csv’s, defaults to ‘_real_coords.csv’</p></li>
+<li><p><strong>buffer_col</strong> (<em>str</em>) – Used to show what variable should be used to determine the buffer, defaults to ‘r’ (radius)</p></li>
+<li><p><strong>epsg_code</strong> (<em>str</em>) – The EPSG code of the input coordinate system, defaults to ‘EPSG:3310’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns 0 if file successfully created, otherwise returns 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gis_tools.getCoordinates">
+<code class="sig-prename descclassname"><span class="pre">gis_tools.</span></code><code class="sig-name descname"><span class="pre">getCoordinates</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_raster</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gis_tools.getCoordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function uses GDAL to get the coordinates and pixel resolution from a georeferenced image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_raster</strong> (<em>str</em>) – Filepath to a georeferenced raster.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a 3 element list containing the latitude, longitude, and pixel resolution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[lat, lon, pixel_res]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gis_tools.pixelToReal">
+<code class="sig-prename descclassname"><span class="pre">gis_tools.</span></code><code class="sig-name descname"><span class="pre">pixelToReal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pix_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pix_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gis_tools.pixelToReal" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function transforms pixel coordinates (and radius) into realworld coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lat</strong> (<em>float</em>) – Latitude of upper left pixel</p></li>
+<li><p><strong>lon</strong> (<em>float</em>) – Longitude of upper left pixel</p></li>
+<li><p><strong>pixel_res</strong> (<em>float</em>) – Pixel resolution of real world coordinates</p></li>
+<li><p><strong>pix_x</strong> (<em>int</em>) – x position of pixel coordinate</p></li>
+<li><p><strong>pix_y</strong> (<em>int</em>) – y position of puxel coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a 3 element list containing the latitude, longitude, and radius in real world coordinates.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[lat, lon, pixel_res]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Night Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">night_tool</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gis_tools module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">night_tool</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">night_tool</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Theo Hartsook.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/gis_tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

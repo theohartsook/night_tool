@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>scipy_vision_tools module &#8212; Night Tools 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="gis_tools module" href="gis_tools.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-scipy_vision_tools">
+<span id="scipy-vision-tools-module"></span><h1>scipy_vision_tools module<a class="headerlink" href="#module-scipy_vision_tools" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="scipy_vision_tools.applySegmentationSteps">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">applySegmentationSteps</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.applySegmentationSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a convenience function to apply all my vision steps in one go.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>output_root</strong> (<em>str</em>) – The filepath to the directory where outputs will be created.</p></li>
+<li><p><strong>save_intermediate</strong> (<em>bool</em>) – Flag to save intermediate outputs to disk, defaults to False.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Flag to overwrite existing outputs, defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns 0 if output successfully created, otherwise returns 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.calculatePixelMetrics">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">calculatePixelMetrics</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.calculatePixelMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates pixel metrics for every detection in a dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em>) – Filepath to the input img</p></li>
+<li><p><strong>input_df</strong> (<em>pandas dataframe</em>) – Dataframe with detections</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the dataframe augmented with pixel metrics.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.calculatePixelMetricsMP">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">calculatePixelMetricsMP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.calculatePixelMetricsMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A multiproessing pixel metrics implementation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em>) – Filepath to the input img</p></li>
+<li><p><strong>input_df</strong> (<em>pandas dataframe</em>) – Dataframe with detections</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – Number of workers to assign, defaults to 8.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the dataframe augmented with pixel metrics.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.calculatePixelMetricsQueue">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">calculatePixelMetricsQueue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.calculatePixelMetricsQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a queue for multiprocessing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>Multiprocessing.Queue object</em>) – the queue generated by calculatePixelMetricsMP</p></li>
+<li><p><strong>input_img</strong> (<em>str</em>) – Filepath to the input img</p></li>
+<li><p><strong>input_df</strong> (<em>pandas dataframe</em>) – Dataframe with detections</p></li>
+<li><p><strong>output_list</strong> (<em>Multiprocessing.Manager object</em>) – a Manager generated by calculatePixelMetricsMP</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.calculateTrimOffsetBackward">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">calculateTrimOffsetBackward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.calculateTrimOffsetBackward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function is used to calculate the offset of the lower right corner</dt><dd><p>after trimming. The threshold should be the same as whatever is used in
+trim2DArray. 
+Returns the x and y of the lower right corner.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_arr</strong> – <p>A 2D numpy array to be trimmed.
+:type input_arr: numpy array
+:param threshold: Any exterior row or column with a total less than or equal to threshold will be removed, defaults to 0.
+:type threshold: int or float</p>
+<dl class="field-list simple">
+<dt class="field-odd">return</dt>
+<dd class="field-odd"><p>Returns the x and y of the lower right corner.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>int, int</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.calculateTrimOffsetForward">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">calculateTrimOffsetForward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.calculateTrimOffsetForward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function is used to calculate the offset of the upper left corner</dt><dd><p>after trimming. The threshold should be the same as whatever is used in
+trim2DArray.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_arr</strong> (<em>numpy array</em>) – A 2D numpy array to be trimmed.</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Any exterior row or column with a total less than or equal to threshold will be removed, defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the x and y of the upper left corner.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int, int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.circleMask">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">circleMask</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.circleMask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an img (loaded as a np array), the x and y coordinates to center
+the mask, the radius of the mask, and the mode. Mode must be interior
+or exterior. The default filter value is 0. 
+<a class="reference external" href="https://towardsdatascience.com/the-little-known-ogrid-function-in-numpy-19ead3bdae40">https://towardsdatascience.com/the-little-known-ogrid-function-in-numpy-19ead3bdae40</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>numpy array</em>) – An image loaded as a numpy array.</p></li>
+<li><p><strong>cir_x</strong> (<em>int</em>) – The x coordinate of the center of the circle.</p></li>
+<li><p><strong>cir_y</strong> (<em>int</em>) – The y coordinate of the center of the circle.</p></li>
+<li><p><strong>r</strong> (<em>int</em>) – The radius of the circle mask</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – Determines what is inside and outside the mask. Must be interior or exterior</p></li>
+<li><p><strong>filter</strong> (<em>int</em><em> or </em><em>float</em>) – The value for pixels outside the mask, defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns True if the image is too small to be a valid cluster, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.connectedComponentsImage">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">connectedComponentsImage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.connectedComponentsImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies connected components labelling to an input image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>connectivity</strong> (<em>int</em>) – Controls the distance to connect components, defaults to 1.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array with the connected components.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.countPixels">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">countPixels</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.countPixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts pixels within a radius around x, y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>x</strong> (<em>int</em>) – The x coordinate of the center of the circle.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – The y coordinate of the center of the circle.</p></li>
+<li><p><strong>r</strong> (<em>int</em>) – The radius around the center of the circle</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the number of pixels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.edgeDetection">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">edgeDetection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.edgeDetection" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Takes either a string to an image or a np array as input and an integer</dt><dd><p>for sigma. Default settings are for thresholded images.Supported input
+modes are: “np” (numpy array) or “fp” (filepath). Returns an image of 
+edge detections. If output path is applied, the edge raster will be saved.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>sigma</strong> (<em>int</em>) – Controls the scale of edge detection, defaults to 1.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array of transformed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.exportBlobs">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">exportBlobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_blobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.exportBlobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input_img and input_blobs will be opened with identical modes. Output is a
+directory containing base and blobs subdirectories. Base has the mask for each blob
+applied to the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_img</strong> – Either the filepath to the input blobs (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>output_root</strong> (<em>str</em>) – The filepath to the directory where clusters will be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns 0 upon completion.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.getDistanceRaster">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">getDistanceRaster</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.getDistanceRaster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a string containing the file path to the input image and an
+optional string with the desired output filepath. Returns a np array 
+with the distance transform applied. If output path is applied, the
+distance raster will be saved. 
+Note: the logical not is necessary for the scipy function.
+<a class="reference external" href="https://stackoverflow.com/questions/44770396/how-does-the-scipy-distance-transform-edt-function-work">https://stackoverflow.com/questions/44770396/how-does-the-scipy-distance-transform-edt-function-work</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array of transformed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.getImageThreshold">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">getImageThreshold</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.getImageThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Takes either a string to an image or a np array as input and a float</dt><dd><p>for thresholding. Supported input modes are: “np” (numpy array) or “fp”
+(filepath). Returns a thresholded image. If output path is applied, the
+thresholded raster will be saved.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – The comparison value for thresholding.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array of transformed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.loadImage">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">loadImage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.loadImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the image from img path as a np array using PIL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>img_path</strong> (<em>str</em>) – Filepath to the input img</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the image loaded as a numpy array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.morphologicalCloseImage">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">morphologicalCloseImage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.morphologicalCloseImage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Takes either a string to an image or a np array as input and an integer</dt><dd><p>for structuring element. Applies a circular structuring element. Supported input
+modes are: “np” (numpy array) or “fp” (filepath). Returns an image with
+a closing appplied. If output path is applied, the closed raster will be saved.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>stel</strong> (<em>int</em>) – Controls the size of structuring element, defaults to 50.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array of transformed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.ridgeDetection">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">ridgeDetection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meijering'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_ridges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.ridgeDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies ridge detection to an input image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Ridge detection algorithm, defaults to meijering.</p></li>
+<li><p><strong>black_ridges</strong> (<em>bool</em>) – Controls whether black or white pixels are the ridges, defaults to False (white pixels = ridge).</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array with the connected components.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.saveImage">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">saveImage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">np_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.saveImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a np array as input and saves it to output path using PIL.
+Current supported modes are:
+dist_norm - distance normalization I use for distance transforms
+blob_labels - 255 scaling I use for connected components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>np_img</strong> (<em>numpy array</em>) – The numpy array to be saved</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The filepath of the image to be saved.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – There are two convenience modes: ‘dist_norm’ (distance transform normalization) and ‘blob_labels’ (blob labelling), defaults to None.</p></li>
+<li><p><strong>scale</strong> (<em>int</em><em> or </em><em>float</em>) – Value used for scaling in distance normalization, defaults to 255.0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the image loaded as a numpy array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.segmentDirectoryMP">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">segmentDirectoryMP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.segmentDirectoryMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A multiprocessing segmenter.
+:param input_dir: Filepath to the input directory.
+:type input_dir: str
+:param output_root: The filepath to the directory where outputs will be created.
+:type output_root: str
+:param num_workers: Number of workers to assign.
+:type num_workers: int
+:param target: The file ending for valid inputs, defaults to ‘.tif’
+:type target: str
+:param save_intermediate: Flag to save intermediate outputs to disk, defaults to False.
+:type save_intermediate: bool
+:param overwrite: Flag to overwrite existing outputs, defaults to False.
+:type overwrite: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.segmentationVisionQueue">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">segmentationVisionQueue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.segmentationVisionQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a queue for multiprocessing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>Multiprocessing.Queue object</em>) – the queue generated by segment Directory</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – the filepath to the directory where outputs will be saved.</p></li>
+<li><p><strong>save_intermediate</strong> (<em>bool</em>) – Flag to save intermediate outputs to disk, defaults to False.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Flag to overwrite existing outputs, defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.skeletonizeImage">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">skeletonizeImage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.skeletonizeImage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Takes either a string to an image or a np array as input. Supported</dt><dd><p>input modes are: “np” (numpy array) or “fp” (filepath). Returns a
+skeletonized image. If output path is applied, the closed raster will
+be saved.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath of the image to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns numpy array of transformed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.testVerySmallClusters">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">testVerySmallClusters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.testVerySmallClusters" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This functions takes a cluster as input and tests if its biggest</dt><dd><p>circle would be too small. 
+Returns True if it’s smaller and False if it’s bigger.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_img</strong> (<em>str</em><em> or </em><em>numpy array</em>) – Either the filepath to the input img (input_mode=’fp’) or a numpy array (input_mode=’np’).</p></li>
+<li><p><strong>input_mode</strong> (<em>str</em>) – ‘fp’ if input_img is a filepath or ‘np’ if input_img is a numpy array.</p></li>
+<li><p><strong>min_rad</strong> (<em>int</em><em> or </em><em>float</em>) – the minimum radius for a valid cluster, defaults to 7.5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns True if the image is too small to be a valid cluster, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scipy_vision_tools.trim2DArray">
+<code class="sig-prename descclassname"><span class="pre">scipy_vision_tools.</span></code><code class="sig-name descname"><span class="pre">trim2DArray</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy_vision_tools.trim2DArray" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Convenience function to trim a 2D array. Removes any rows/columns</dt><dd><p>with values equal to or less than the threshold. Source: 
+<a class="reference external" href="https://stackoverflow.com/questions/11188364/remove-zero-lines-2-d-numpy-array?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa">https://stackoverflow.com/questions/11188364/remove-zero-lines-2-d-numpy-array?utm_medium=organic&amp;utm_source=google_rich_qa&amp;utm_campaign=google_rich_qa</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_arr</strong> (<em>numpy array</em>) – A 2D numpy array to be trimmed.</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em>) – Any exterior row or column with a total less than or equal to threshold will be removed, defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a subset of the input array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Night Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">night_tool</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gis_tools.html">gis_tools module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">scipy_vision_tools module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">night_tool</a><ul>
+      <li>Previous: <a href="gis_tools.html" title="previous chapter">gis_tools module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Theo Hartsook.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/scipy_vision_tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
