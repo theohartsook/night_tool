@@ -10,6 +10,8 @@ Welcome to Night Tools's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   dependencies
+   workflows
    modules
 
 

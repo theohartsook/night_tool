@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hough_tools module &#8212; Night Tools 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="scipy_vision_tools module" href="scipy_vision_tools.html" />
+    <link rel="prev" title="gis_tools module" href="gis_tools.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-hough_tools">
+<span id="hough-tools-module"></span><h1>hough_tools module<a class="headerlink" href="#module-hough_tools" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="hough_tools.applyHough">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">applyHough</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_raster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_peaks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.applyHough" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Convenience function for loopApplyHough. Needs string of filepaths to </dt><dd><p>input raster and a list of radii made with np.arange().
+Returns the weight, pixel location, and radius of each detected circle.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_raster</strong> (<em>str</em>) – Filepath to the input raster</p></li>
+<li><p><strong>radii</strong> (<em>list</em><em>(</em><em>int</em><em>)</em>) – a list of radii made with np.arange()</p></li>
+<li><p><strong>num_peaks</strong> (<em>int</em>) – maximum number of detections per search.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Coordinates of the circle detections and their weights</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int, int, int, float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.chunkedRastersHough">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">chunkedRastersHough</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.chunkedRastersHough" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies Hough transforms to each image in a directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dir</strong> (<em>str</em>) – Filepath to the directory with subdivided images.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Filepath to the directory where detections will be saved.</p></li>
+<li><p><strong>params</strong> (<em>list</em><em>[</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – See params section for more informaiton.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.houghAllDirsMP">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">houghAllDirsMP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_img_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.houghAllDirsMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiprocessing implementation of houghOnDir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_root</strong> (<em>str</em>) – Filepath to the directory containing clustered subimages.</p></li>
+<li><p><strong>temp_root</strong> (<em>str</em>) – Filepath to the directory where intermediate outputs will be created.</p></li>
+<li><p><strong>pixel_dir</strong> (<em>str</em>) – The filepath to the directory where pixel detection outputs will be stored.</p></li>
+<li><p><strong>original_img_dir</strong> (<em>str</em>) – Filepath with the original images used to create subimages.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – Number of workers to assign.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+<li><p><strong>save_intermediate</strong> (<em>bool</em>) – Flag to save intermediate outputs to disk, defaults to False.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Flag to overwrite existing outputs, defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.houghCircleQueue">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">houghCircleQueue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_img_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.houghCircleQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a queue for multiprocessing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>Multiprocessing.Queue object</em>) – the queue generated by houghAllDrisMP</p></li>
+<li><p><strong>input_root</strong> (<em>str</em>) – Filepath to the directory containing clustered subimages.</p></li>
+<li><p><strong>temp_root</strong> (<em>str</em>) – Filepath to the directory where intermediate outputs will be created.</p></li>
+<li><p><strong>pixel_dir</strong> (<em>str</em>) – The filepath to the directory where pixel detection outputs will be stored.</p></li>
+<li><p><strong>original_img_dir</strong> (<em>str</em>) – Filepath with the original images used to create subimages.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – Number of workers to assign.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+<li><p><strong>save_intermediate</strong> (<em>bool</em>) – Flag to save intermediate outputs to disk, defaults to False.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Flag to overwrite existing outputs, defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.houghOnDir">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">houghOnDir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.houghOnDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies Hough transforms to all images in a directory and merges the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dir</strong> (<em>str</em>) – Filepath to the directory with subdivided images.</p></li>
+<li><p><strong>temp_dir</strong> (<em>str</em>) – The filepath to the directory where intermediate outputs will be stored.</p></li>
+<li><p><strong>output_csv</strong> (<em>str</em>) – Filepath to the desired output.</p></li>
+<li><p><strong>base_image</strong> – Filepath to the original image.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+<li><p><strong>cleanup</strong> (<em>bool</em>) – Controls whether or not intermediate files are removed upon completion, defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.houghStep1">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">houghStep1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_img_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.houghStep1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parallel Hough detections to pixel coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_root</strong> (<em>str</em>) – Filepath to the directory containing clustered subimages.</p></li>
+<li><p><strong>temp_root</strong> (<em>str</em>) – Filepath to the directory where intermediate outputs will be created.</p></li>
+<li><p><strong>pixel_dir</strong> (<em>str</em>) – The filepath to the directory where pixel detection outputs will be stored.</p></li>
+<li><p><strong>original_img_dir</strong> (<em>str</em>) – Filepath with the original images used to create subimages.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – Number of workers to assign.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+<li><p><strong>save_intermediate</strong> (<em>bool</em>) – Flag to save intermediate outputs to disk, defaults to False.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Flag to overwrite existing outputs, defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.houghStep2">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">houghStep2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_img_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.houghStep2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parallel pixel metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_img_dir</strong> (<em>str</em>) – Filepath with the original images used to create subimages.</p></li>
+<li><p><strong>pixel_dir</strong> (<em>str</em>) – The filepath to the directory where pixel detection outputs will be stored.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em>) – Number of workers to assign.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.houghStep3">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">houghStep3</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.houghStep3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply CRS and transform to buffered .shp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dir</strong> (<em>str</em>) – Filepath to an input directory with .csv’s created by Hough tools</p></li>
+<li><p><strong>ouput_dir</strong> – Filepath to directory where output .shp’s will be saved.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.loopApplyHough">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">loopApplyHough</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_raster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.loopApplyHough" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Needs strings of filepaths to input raster and output csv, and a list</dt><dd><p>of parameters in the format [[min_rad, max_rad, num_peaks], …].
+Searches an image for all sets of those parameters and saves them in
+the output .csv.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_raster</strong> (<em>str</em>) – Filepath to the input raster</p></li>
+<li><p><strong>output_csv</strong> (<em>str</em>) – Filepath to save the merged output .csv</p></li>
+<li><p><strong>params</strong> (<em>list</em><em>[</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – See params section for more informaiton.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hough_tools.mergeChunkedDetections">
+<code class="sig-prename descclassname"><span class="pre">hough_tools.</span></code><code class="sig-name descname"><span class="pre">mergeChunkedDetections</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.csv'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hough_tools.mergeChunkedDetections" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is being rewritten for the new clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plot</strong> (<em>int</em>) – plot ID for image, used to label detections.</p></li>
+<li><p><strong>input_dir</strong> (<em>str</em>) – Filepath to the directory with detections (temp dir from chunkedRastersHough)</p></li>
+<li><p><strong>x_len</strong> (<em>int</em>) – Width of the input image</p></li>
+<li><p><strong>y_len</strong> (<em>int</em>) – Length of the input image</p></li>
+<li><p><strong>output_csv</strong> (<em>str</em>) – Filepath to save the merged output .csv</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.csv’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Night Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Night Tools</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gis_tools.html">gis_tools module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hough_tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scipy_vision_tools.html">scipy_vision_tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utility_tools.html">utility_tools module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Night Tools</a><ul>
+      <li>Previous: <a href="gis_tools.html" title="previous chapter">gis_tools module</a></li>
+      <li>Next: <a href="scipy_vision_tools.html" title="next chapter">scipy_vision_tools module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Theo Hartsook.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/hough_tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>utility_tools module &#8212; Night Tools 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="scipy_vision_tools module" href="scipy_vision_tools.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-utility_tools">
+<span id="utility-tools-module"></span><h1>utility_tools module<a class="headerlink" href="#module-utility_tools" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="utility_tools.extractTLSID">
+<code class="sig-prename descclassname"><span class="pre">utility_tools.</span></code><code class="sig-name descname"><span class="pre">extractTLSID</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility_tools.extractTLSID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to extract TLS ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_str</strong> (<em>str</em>) – String containing TLS ID.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the extracted TLS ID.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utility_tools.matchTLS">
+<code class="sig-prename descclassname"><span class="pre">utility_tools.</span></code><code class="sig-name descname"><span class="pre">matchTLS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.tif'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utility_tools.matchTLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a convenience function to match two files linked by TLS ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> (<em>str</em>) – Filename with the TLS ID to be matched.</p></li>
+<li><p><strong>target_dir</strong> – Filepath to the directory to look for matches.</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – The file ending for valid inputs, defaults to ‘.tif’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>target_dir: str</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns the full filepath to the matching file, or ‘no match found.’</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Night Tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">night_tool</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gis_tools.html">gis_tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hough_tools.html">hough_tools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scipy_vision_tools.html">scipy_vision_tools module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">utility_tools module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">night_tool</a><ul>
+      <li>Previous: <a href="scipy_vision_tools.html" title="previous chapter">scipy_vision_tools module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Theo Hartsook.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/utility_tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
