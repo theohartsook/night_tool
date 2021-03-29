@@ -1,6 +1,10 @@
 import geopandas as gpd
-import pandas as pd
+import math
 import os
+import pandas as pd
+import subprocess
+
+from shapely.geometry import Polygon, box
 
 def detectionsFromPoints(input_csv, output_shp, buffer_col='r', epsg_code='EPSG:3310'):
     """This is a convenience function for converting my Hough detections to
@@ -48,7 +52,7 @@ def detectionsOnDir(input_dir, output_dir, csv_name='_real_coords.csv', buffer_c
     """
 
     for i in sorted(os.listdir(input_dir)):
-        if not i.endswith('.csv'):
+        if not i.endswith(csv_name):
             continue
         input_csv = input_dir + '/' + i
         print(i)
@@ -120,14 +124,78 @@ def applyPixelToReal(input_raster, input_csv, output_csv):
     """
 
     lon, lat, pixel_res = getCoordinates(input_raster)
-    output_df = pd.DataFrame(columns = ["plot", "x", "y", "r", "weight"])
+    output_df = pd.DataFrame(columns = ["plot", "x", "y", "r", "weight", "inner", "outer", "core"])
     df = pd.read_csv(input_csv)
     for index, row in df.iterrows():
         real_coords = pixelToReal(lat, lon, pixel_res, row["x"], row["y"], row["r"])
-        output_df = output_df.append({"plot" : row["plot"], "x" : real_coords[0], "y" : real_coords[1], "r": real_coords[2], "weight" : row["weight"]}, ignore_index=True)
+        output_df = output_df.append({"plot" : row["plot"], "x" : real_coords[0], "y" : real_coords[1], "r": real_coords[2], "weight" : row["weight"], "inner" : row["inner"], "outer" : row["outer"], "core" : row["core"]}, ignore_index=True)
     output_df.to_csv(output_csv, index=False)
     if os.path.exists(output_csv):
         return 0
     else:
         return 1
 
+def findSketchyCircles(input_gdf, weight_thresh=0.4, size_quant=0.9):
+    """This is a convenience function to select circles that need more review.
+
+    :param input_gdf: A set of geometries with weights (output from Hough step 1).
+    :type input_csv: geopandas GeoDataFrame
+    :param weight_thresh: Any polygon with a weight >= to the threshold will be included.
+    :type weight_thresh: float
+    :param size_quant: The upper quantile of circle sizes to be included.
+    :type size_quant: float
+
+    :return: Returns a GeoDataFrame containing the circles needed for more review.
+    :rtype: geopandas GeoDataFrame
+    """
+
+    high_weights_gdf = input_gdf[input_gdf.weight >= weight_thresh]
+
+    quants = high_weights_gdf.r.quantile(size_quant)
+
+    all_geom = high_weights_gdf.geometry.unary_union
+
+    min_area = (quants*math.pi)**2
+
+    merged_geom = gpd.GeoDataFrame(geometry=[all_geom])
+
+    merged_geom = merged_geom.explode().reset_index(drop=True)
+
+    target_df = merged_geom[merged_geom.geometry.area > min_area]
+
+    return(target_df)
+
+def polysToBoundingBoxes(input_gdf):
+    """This is a convenience function to get the bounding boxes of a bunch of
+       polygons. 
+
+    :param input_gdf: A set of geometries with weights (output from Hough step 1).
+    :type input_csv: geopandas GeoDataFrame
+
+    :return: Returns a GeoDataFrame of the bounding boxes from the input.
+    :rtype: geopandas GeoDataFrame
+    """
+    boxin = input_gdf.bounds
+
+    coords = []
+
+    for index, row in boxin.iterrows():
+        ul_x = row['minx']
+        ul_y = row['miny']
+        lr_x = row['maxx']
+        lr_y = row['maxy']
+
+        bb = box(ul_x, ul_y, lr_x, lr_y)
+        coords.append(bb)
+
+    # make a new gpd to fill in box polygons
+
+    boxout = gpd.GeoSeries()
+
+    for i in coords:
+        poly = gpd.GeoSeries(i)
+        boxout = boxout.append(poly)
+
+    output_df = gpd.GeoDataFrame(geometry=boxout)
+
+    return(output_df)

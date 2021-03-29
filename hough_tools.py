@@ -11,14 +11,16 @@ from PIL import Image
 from scipy import ndimage
 from skimage import feature, filters, measure, morphology, data, color
 from skimage.transform import hough_circle, hough_circle_peaks
+from skimage.draw import circle_perimeter
+from skimage.util import img_as_ubyte
 
-from scipy_vision_tools import loadImage, circleMask, calculatePixelMetricsMP
-from gis_tools import detectionsOnDir
+from scipy_vision_tools import loadImage, saveImage, circleMask, calculatePixelMetricsMP, trim2DArray, calculateTrimOffsetForward, calculateTrimOffsetBackward
+from gis_tools import applyPixelToReal, detectionsOnDir
 from utility_tools import matchTLS
 
 # I got these from Rodney and so far they have worked well.
 PARAMS = [[7,10,18],[11,15,18],[16,20,12],[21,25,12],[26,30,8],[31,35,8],[36,40,8],[41,45,6],[46,50,6],[51,55,4],[56,60,4],[61,65,4],[66,70,4],[71,75,4],[76,80,4],[81,85,4],[86,90,4],
-[91,95,4],[96,100,4],[101,250,1]]
+[91,95,4],[96,100,4],[101,250,1],[251,500,1],[501,1000,1]]
 
 # high level
 def houghStep1(input_root, temp_root, pixel_dir, original_img_dir, num_workers, target='.tif', save_intermediate=False, overwrite=False):
@@ -65,9 +67,11 @@ def houghStep2(original_img_dir, pixel_dir, output_dir, num_workers, target='.ti
         if input_img == 'no match found':
             continue
         output_df = calculatePixelMetricsMP(input_img, input_df, num_workers)
-        output_csv = output_dir + '/' + i[:-17] + '_augmented_pixel_coords.csv'
-        print(output_csv)
-        output_df.to_csv(output_csv, index=False)
+        pixel_coords = output_dir + '/' + i[:-17] + '_augmented_pixel_coords.csv'
+        print(pixel_coords)
+        output_df.to_csv(pixel_coords, index=False)
+        real_coords = output_dir + '/' + i[:-17] + '_real_world_coords.csv'
+        applyPixelToReal(input_img, pixel_coords, real_coords)
 
 def houghStep3(input_dir, output_dir):
     """ Apply CRS and transform to buffered .shp. 
@@ -125,14 +129,25 @@ def chunkedRastersHough(input_dir, output_dir, params, target='.tif'):
     :type target: str
 
     """
-
+    print('chunked starts')
     for i in sorted(os.listdir(input_dir)):
         if not i.endswith(target):
             continue
-        input_raster = input_dir + '/' + i
-        print(input_raster)
-        output_csv = output_dir + '/' + i[:-4] + '.csv'
-        loopApplyHough(input_raster, output_csv, params)
+        input_raster = loadImage(input_dir + '/' + i)
+        trimmed_raster = trim2DArray(input_raster)
+        ul_x, ul_y = calculateTrimOffsetForward(input_raster)
+        info = i.split('_')
+        x = int(info[0])
+        y = int(info[1])
+        group = info[-1]
+        group = group[:-4]
+        print('input:', input_raster.shape)
+        print('trimmed:', trimmed_raster.shape)
+        print('untrimmed upper left:', x, y)
+        print('trimmed upper left:', ul_x, ul_y)
+        output_csv = output_dir + '/' + str(x + ul_x) + '_' + str(y + ul_y) + '_' +str(group) + '.csv'
+        print(output_csv)
+        loopApplyHough(trimmed_raster, output_csv, params)
 
 def mergeChunkedDetections(plot, input_dir, x_len, y_len, output_csv, target='.csv'):
     """ This is being rewritten for the new clusters. 
@@ -168,15 +183,15 @@ def mergeChunkedDetections(plot, input_dir, x_len, y_len, output_csv, target='.c
                 print('y:', ul_y, '+', row["y"], '=', y)
             df = df.append({"plot" : plot, "x" : x, "y" : y, "r": row["r"], "weight" : row["weight"]}, ignore_index=True)
     df.to_csv(output_csv, index=False)
+    print('perhaps i froze')
 
 # lowlevel
-def applyHough(input_raster, radii, num_peaks):
-    """ Convenience function for loopApplyHough. Needs string of filepaths to 
-        input raster and a list of radii made with np.arange().
+def applyHough(np_img, radii, num_peaks):
+    """ Convenience function for loopApplyHough. Needs input raster loaded as numpy array and a list of radii made with np.arange().
         Returns the weight, pixel location, and radius of each detected circle.
 
-    :param input_raster: Filepath to the input raster
-    :type input_raster: str        
+    :param input_raster: Numpy array of input raster
+    :type input_raster: numpy array        
     :param radii: a list of radii made with np.arange()
     :type radii: list(int)
     :param num_peaks: maximum number of detections per search.
@@ -186,7 +201,6 @@ def applyHough(input_raster, radii, num_peaks):
     :rtype: int, int, int, float.
 
     """
-    np_img = loadImage(input_raster)
     hough_res = hough_circle(np_img, radii)
     accums, cx, cy, radii = hough_circle_peaks(hough_res, radii,
                                                min_xdistance = radii[0],
@@ -195,14 +209,14 @@ def applyHough(input_raster, radii, num_peaks):
                                                total_num_peaks=num_peaks)
     return (cx, cy, radii, accums)
 
-def loopApplyHough(input_raster, output_csv, params):
+def loopApplyHough(np_img, output_csv, params):
     """ Needs strings of filepaths to input raster and output csv, and a list
         of parameters in the format [[min_rad, max_rad, num_peaks], ...].
         Searches an image for all sets of those parameters and saves them in
         the output .csv.
 
-    :param input_raster: Filepath to the input raster
-    :type input_raster: str
+    :param np_img: Raster loaded as numpy array
+    :type np_img: numpy array
     :param output_csv: Filepath to save the merged output .csv
     :type output_csv: str
     :param params: See params section for more informaiton.
@@ -210,19 +224,26 @@ def loopApplyHough(input_raster, output_csv, params):
 
     """    
     df = pd.DataFrame(columns = ["x", "y", "r", "weight"])
-    img = loadImage(input_raster)
-    b,a = img.shape
+    b,a = np_img.shape
     for i in params:
         if a < b:
             c = a/2
         else:
             c = b/2
         if i[0] > c:
-            continue
+            print('\nmin radius', i[0], 'is smaller than the image', c, '\n')
+            break
         radii = np.arange(i[0], i[1], 1)
         peaks_5_by_5 = i[2]
         num_peaks = math.ceil((peaks_5_by_5/25.)*a*b)
-        x, y, r, weight = applyHough(input_raster, radii, num_peaks)
+        x, y, r, weight = applyHough(np_img, radii, num_peaks)
+        for center_y, center_x, radius in zip(y, x, r):
+            circy, circx = circle_perimeter(center_y, center_x, radius,
+                                    shape=np_img.shape)
+            np_img[circy, circx] = (255)
+        output = output_csv.split('/')
+        output = output[-1]
+        saveImage(np_img, '/Users/theo/data/vision_pipeline_mp_test/debug/' + output[:-4] + '.tif')
         for j in range(0, len(x)):
             df = df.append({"x" : x[j], "y" : y[j], "r": r[j],
                             "weight" : weight[j]}, ignore_index=True)

@@ -429,11 +429,15 @@ def trim2DArray(input_arr, threshold=0):
     :return: Returns a subset of the input array.
     :rtype: numpy array
     """    
- 
+
     print(input_arr.shape)
-    output_arr = input_arr[~np.all(input_arr <= threshold, axis=1)]
-    output_arr = output_arr[:, ~np.all(output_arr <= threshold, axis=0)]
+    ul_x, ul_y = calculateTrimOffsetForward(input_arr, threshold)
+    lr_x, lr_y = calculateTrimOffsetBackward(input_arr, threshold)
+
+    output_arr = input_arr[ul_y:lr_y, ul_x:lr_x]
+
     print(output_arr.shape)
+
     return (output_arr)
 
 def calculateTrimOffsetForward(input_arr, threshold=0):
@@ -480,6 +484,7 @@ def calculateTrimOffsetBackward(input_arr, threshold=0):
     :rtype: int, int
     """   
 
+    y,x = input_arr.shape
     lr_x, lr_y = 0, 0
 
     row_sum = np.sum(np.flip(input_arr), axis=1)
@@ -559,7 +564,7 @@ def circleMask(img, cir_x, cir_y, r, mode, filter=0):
     n,m = img.shape
 
     #create an open grid for our image
-    x,y = np.ogrid[0:n, 0:m]
+    y,x = np.ogrid[0:n, 0:m]
     #operate on a copy of the image
     copyImg = img.copy()
 
@@ -567,8 +572,7 @@ def circleMask(img, cir_x, cir_y, r, mode, filter=0):
     center_x = cir_x
     center_y = cir_y
 
-    #create a circle mask which is centered in the middle of the image, and with radius 100
-
+    #create a circle mask
     if mode == 'interior':
         circle_mask = (x-center_x)**2 + (y-center_y)**2 <= r**2
     elif mode == 'exterior':
@@ -606,22 +610,21 @@ def countPixels(input_img, input_mode, x, y, r):
         return (input_mode, " is not a supported mode. Supported modes are 'np' or 'fp'.")
 
     base_img = circleMask(np_img, x, y, r, 'exterior')
-    base_count = np.count_nonzero(np_img*base_img)
 
-    core_img = circleMask(np_img, x, y, r*0.1, 'exterior')
-    core_count = np.count_nonzero(np_img*core_img)
+    core_img = circleMask(np_img, x, y, r*0.2, 'exterior')
+    core_count = np.count_nonzero(base_img*core_img)
 
-    inner_img = circleMask(np_img, x, y, r*0.95, 'exterior')
-    inner_count = np.count_nonzero(np_img*inner_img)
-    inner_ring = base_count - inner_count
+    inner_img = circleMask(np_img, x, y, r*0.8, 'exterior')
+    inner_ring = base_img - inner_img
+    inner_count = np.count_nonzero(inner_ring)
 
-    outer_img = circleMask(np_img, x, y, r*1.05, 'exterior')
-    outer_count = np.count_nonzero(np_img*outer_img)
-    outer_ring = outer_count - base_count
-
+    outer_img = circleMask(np_img, x, y, r*1.2, 'exterior')
+    outer_ring = outer_img - base_img
+    outer_count = np.count_nonzero(outer_ring)
 
 
-    return (core_count, inner_ring, outer_ring)
+
+    return (core_count, inner_count, outer_count)
 
 # multiprocessing
 
@@ -709,7 +712,7 @@ def calculatePixelMetricsMP(input_img, input_df, num_workers=8):
     workers.close()
     workers.join()
         
-    header = ['plot', 'x', 'y', 'r', 'weight', 'outer', 'inner', 'core']
+    header = ['plot', 'x', 'y', 'r', 'weight', 'core', 'inner', 'outer']
     print(len(new_cir))
     output_df = pd.DataFrame(list(new_cir), columns=header)
     return output_df
