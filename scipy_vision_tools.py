@@ -292,7 +292,7 @@ def exportBlobs(input_img, input_blobs, input_mode, output_root):
         np_img = loadImage(input_img)
         np_blobs = loadImage(input_blobs)
     elif input_mode == 'np':
-        np_img = loadImage(input_img)
+        np_img = input_img
         np_blobs = input_blobs
     else:
         return (input_mode, " is not a supported mode. Supported modes are 'np' or 'fp'.")
@@ -611,7 +611,7 @@ def countPixels(input_img, input_mode, x, y, r):
 
     base_img = circleMask(np_img, x, y, r, 'exterior')
 
-    core_img = circleMask(np_img, x, y, r*0.2, 'exterior')
+    core_img = circleMask(np_img, x, y, r*0.8, 'exterior')
     core_count = np.count_nonzero(base_img*core_img)
 
     inner_img = circleMask(np_img, x, y, r*0.8, 'exterior')

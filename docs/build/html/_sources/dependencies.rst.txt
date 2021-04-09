@@ -18,8 +18,11 @@ Python packages
 - numpy
 - pandas
 - PIL
+- rasterio
 - scipy
+- shapely
 - skimage
+- sklearn
 
 
 Other software

@@ -22,7 +22,7 @@ copyright = '2021, Theo Hartsook'
 author = 'Theo Hartsook'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = '0.1.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,7 +40,7 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-autodoc_mock_imports = ['geopandas', 'pandas', 'matplotlib', 'numpy', 'PIL', 'scipy', 'skimage']
+autodoc_mock_imports = ['geopandas', 'pandas', 'matplotlib', 'numpy', 'PIL', 'scipy', 'skimage', 'sklearn', 'rasterio', 'shapely']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -48,7 +48,7 @@ autodoc_mock_imports = ['geopandas', 'pandas', 'matplotlib', 'numpy', 'PIL', 'sc
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'pyramid'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

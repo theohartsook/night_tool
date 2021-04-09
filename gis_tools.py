@@ -199,3 +199,13 @@ def polysToBoundingBoxes(input_gdf):
     output_df = gpd.GeoDataFrame(geometry=boxout)
 
     return(output_df)
+
+def polyMasks(input_shp, img_path, output_dir):
+    shp = gpd.read_file(input_shp)
+    masks = shp.geometry
+
+    with rasterio.open(img_path) as data:
+        for index, row in masks.iterrows():
+            poly = row.geometry
+            masked_img, aff_tran = rasterio.mask.mask(data, [poly], crop=True)
+            # save some stuff here
