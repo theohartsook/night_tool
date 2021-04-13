@@ -1,6 +1,9 @@
+import math
 import os
 import re
 import shutil
+
+import pandas as pd
 
 from sklearn import model_selection
 
@@ -39,6 +42,16 @@ def extractTLSID(input_str):
     tls_id = re.match("TLS_\d{4}_\d{8}_\d{2}", input_str)
     if tls_id:
         return(tls_id.group())
+
+def extractHeight(input_str):
+    height = re.search("\d\.\d{3}_\d\.\d{3}", input_str)
+    if height:
+        height = height.group()
+        height = height.split('_')
+        min_h = float(height[0])
+        max_h = float(height[1])
+        avg_height = int((min_h + max_h)/2)
+        return str(avg_height)
 
 def normalizeObservedData(line, id_target, x_target, y_target, r_target, dbh=True):
     """ This is a convenience function to normalize the names of inputs for the
@@ -170,3 +183,46 @@ def arrangeData(input_dir, output_root, target='.shp', train_ratio=0.7, val_rati
         if os.path.exists(output_file) and overwrite==False:
             continue
         shutil.copy(input_file, output_file)
+
+def newID(plot, height, x):
+    """ This is a convenience function to generate unique IDs. """
+
+    new_id = str(plot) + '_' + str(height) + '_' + str(x)
+
+    return new_id
+
+def assignIDs(input_df, plot, height):
+    """ This is a convenience function to give every detection in a dataframe a
+        unique ID. """
+
+    uids = []
+    for index, row in input_df.iterrows():
+        uid = newID(plot, height, index)
+        uids.append(uid)
+    output_df = input_df.assign(uid=uids)
+
+    return output_df
+
+def bulkAssignIDs(input_dir, target='.csv'):
+    for i in sorted(os.listdir(input_dir)):
+        if i.endswith(target):
+            input_csv = input_dir + '/' + i
+            input_df = pd.read_csv(input_csv)
+            plot = extractTLSID(i)
+            height = extractHeight(i)
+            output_df = assignIDs(input_df, plot, height)
+            output_df.to_csv(input_csv, index=False)
+
+
+def parseID(uid):
+    """ This is a convenience function to extract the relevant info from UIDs. """
+
+    info = uid.split('_')
+    if len(info) != 3:
+        print('invalid ID')
+        return(1)
+    plot = info[0]
+    height = info[1]
+    tree_id = info[2]
+
+    return plot, height, tree_id
