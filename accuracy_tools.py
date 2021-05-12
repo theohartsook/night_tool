@@ -1,49 +1,12 @@
 import pandas as pd
 import geopandas as gpd
 import math
+import os
 
-from utility_tools import euclidDist, normalizeObservedData
+from utility_tools import euclidDist, normalizeObservedData, matchTLS, extractTLSID
+from multiprocessing import Pool, Process, Queue
 
-def matchAtDifferentHeights(base_df, comp_df, comp_height, max_dist=0.5, max_diff=0.5):
-    header = list(base_df)
-    uid = str(comp_height) + '_uid'
-    delta_xy = str(comp_height) + '_xy_dist'
-    delta_r = str(comp_height) + '_r_diff'
-    new_cols = [uid, delta_xy, delta_r]
-    header.extend(new_cols)
-    match_df = base_df.reindex(columns=header)
-    for index1, row1 in match_df.iterrows():
-        x1 = row1['x']
-        y1 = row1['y']
-        r1 = row1['r']
-        best_match = 0
-        best_sim = 100
-        shortest_dist = 0
-        smallest_diff = 0
 
-        sub_df = comp_df[(comp_df['x'] <= x1+max_dist) & (comp_df['x'] >= x1-max_dist)]
-        sub_df = sub_df[(sub_df['y'] <= y1+max_dist) & (sub_df['y'] >= y1-max_dist)]
-
-        for index2, row2 in sub_df.iterrows():
-            x2 = row2['x']
-            y2 = row2['y']
-            r2 = row2['r']
-            dist = euclidDist(x2, y2, x1, y1)
-            diff = abs(r2 - r1)
-            sim = (dist + diff)
-            if sim < best_sim:
-                best_sim = sim
-                best_match = row2['uid']
-                shortest_dist = dist  
-                smallest_diff = diff   
-            else:
-                continue
-
-        if best_match != 0:
-            match_df.loc[index1, uid] = best_match
-            match_df.loc[index1, delta_xy] = shortest_dist
-            match_df.loc[index1, delta_r] = smallest_diff
-    return match_df     
 
 def detectionAccuracyRF(obs_df, pred_df, out_csv):
     header = list(pred_df)
@@ -123,31 +86,46 @@ def detectionAccuracy(obs_df, pred_df, out_csv):
     output_df = pd.DataFrame(list(matches), columns=header)
     output_df.to_csv(out_csv, index=False)
 
-def findBestPredictionsRF(obs_df, pred_df, output_csv):
+def findBestPredictionsRF(acc_df, output_csv):
 
-    trees = obs_df.Tree_Id.unique()
-    for i in sorted(trees):
-        #detections = pred_df[(pred_df['gt_uid'] == i)]
+    trees = acc_df.gt_uid.unique()
+    for tree in sorted(trees):
         best_index = -1
         best_sim = 100
-        print(i)
-        for index, row in pred_df.iterrows():
-            if row['gt_uid'] != i:
-                continue
+        detections = acc_df.loc[acc_df['gt_uid'] == tree]
+        for index, row in detections.iterrows():
+            uid = row['uid']
             sim = row['gt_xy_dist'] + row['gt_r_diff']
             if sim < best_sim:
-                print('old sim: ', best_sim, '\nnew_sim: ', sim, '\n')
+                if best_index < 0:
+                    print(best_index)
+                    best_index = acc_df.loc[acc_df['uid'] == uid].index.item()
+                    print(best_index)
+                    acc_df.at[best_index, 'gt_uid'] = tree
+                else:
+                    acc_df.at[best_index, 'gt_uid'] = 0
+                    best_index = acc_df.loc[acc_df['uid'] == uid].index.item()
+                    acc_df.at[best_index, 'gt_uid'] = tree
                 best_sim = sim
-                best_index = index   
-            else: continue
-        for index, row in pred_df.iterrows():
-            if row['gt_uid'] != i:
-                continue            
-            elif index == best_index:
-                pred_df.loc[index, 'gt_uid'] = best_index
             else:
-                pred_df.loc[index, 'gt_uid'] = 0
-    pred_df.to_csv(output_csv, index=False)   
+                bad_index = acc_df.loc[acc_df['uid'] == uid].index.item()
+                acc_df.at[bad_index, 'gt_uid'] = 0
+
+
+
+    acc_df.to_csv(output_csv, index=False)   
+
+def findGoodEnoughPredictions(acc_df, output_csv):
+
+    for index, row in acc_df.iterrows():
+        xy_dist = row['gt_xy_dist']
+        r_diff = row['gt_r_diff']
+        if xy_dist <= 0.04:
+            if r_diff <= 0.02:
+                continue
+        else:
+            acc_df.at[index, 'gt_uid'] = 0
+    acc_df.to_csv(output_csv, index=False)
 
 def findBestPredictions(obs_df, pred_df, output_csv):
     """ Finds the detections that most closely match ground truth.
@@ -180,6 +158,119 @@ def findBestPredictions(obs_df, pred_df, output_csv):
     header = ['x', 'y', 'r', 'weight', 'inner', 'outer', 'core', 'treeID', 'xy_dist', 'r_diff']
     output_df = pd.DataFrame(list(matches), columns=header)
     output_df.to_csv(output_csv, index=False)
+
+def accuracyOnDirRF(pred_dir, obs_dir, output_dir, pred_target='.csv', obs_target='.shp', overwrite=False):
+    for pred in sorted(os.listdir(pred_dir)):
+        if not pred.endswith(pred_target):
+            continue
+        pred_fp = pred_dir + '/' + pred
+        obs_fp = matchTLS(pred, obs_dir, target=obs_target)
+        if obs_fp == 'no match found':
+            continue
+        tls_id = extractTLSID(pred)
+        acc_csv = output_dir + '/' + pred[:-4] + '_accuracy.csv'
+        best_csv = output_dir + '/' + pred[:-4] + '_best.csv'
+        if os.path.exists(acc_csv):
+            print('Skipping', tls_id, '...')
+            continue
+        pred_df = pd.read_csv(pred_fp)
+        obs_df = gpd.read_file(obs_fp)
+        detectionAccuracyRF(obs_df, pred_df, acc_csv)
+        acc_df = pd.read_csv(acc_csv)
+        findBestPredictionsRF(acc_df, best_csv)
+
+def bestOnDirMP(acc_dir, output_dir, acc_target='.csv', overwrite=False, num_workers=8):
+    q = Queue()
+    for acc in sorted(os.listdir(acc_dir)):
+        if not acc.endswith(acc_target):
+            continue
+        best_csv = output_dir + '/' + acc[:-4] + '_best.csv'
+        if os.path.exists(best_csv) and overwrite==False:
+            print('Skipping', acc, '...')
+            continue
+        acc_fp = acc_dir + '/' + acc
+        inputs = [acc_fp, best_csv]
+        q.put(inputs)
+    workers = Pool(num_workers, bestQueue,(q,))
+    workers.close()
+    workers.join()
+
+def goodEnoughOnDirMP(acc_dir, output_dir, target='.csv', overwrite=False, num_workers=8):
+    q = Queue()
+    for acc in sorted(os.listdir(acc_dir)):
+        if not acc.endswith(target):
+            continue
+        good_csv = output_dir + '/' + acc[:-4] + '_good.csv'
+        if os.path.exists(good_csv) and overwrite==False:
+            print('Skipping', acc, '...')
+            continue
+        input_csv = acc_dir + '/' + acc
+        inputs = [input_csv, good_csv]
+        q.put(inputs)
+    workers = Pool(num_workers, goodQueue,(q,))
+    workers.close()
+    workers.join()
+
+def bestQueue(q):
+    while not q.empty():
+        try:
+            inputs = q.get()
+            acc_fp = inputs[0]
+            best_csv = inputs[1]
+            acc_df = pd.read_csv(acc_fp)
+            findBestPredictionsRF(acc_df, best_csv)
+        except ValueError as val_error:
+            print(val_error)
+        except Exception as error:
+            print(error)
+
+def goodQueue(q):
+    while not q.empty():
+        try:
+            inputs = q.get()
+            acc_fp = inputs[0]
+            best_csv = inputs[1]
+            acc_df = pd.read_csv(acc_fp)
+            findGoodEnoughPredictions(acc_df, best_csv)
+        except ValueError as val_error:
+            print(val_error)
+        except Exception as error:
+            print(error)
+
+def accuracyOnDirMP(pred_dir, obs_dir, output_dir, pred_target='.csv', obs_target='.shp', overwrite=False, num_workers=8):
+    q = Queue()
+    for pred in sorted(os.listdir(pred_dir)):
+        if not pred.endswith(pred_target):
+            continue
+        pred_fp = pred_dir + '/' + pred
+        obs_fp = matchTLS(pred, obs_dir, target=obs_target)
+        if obs_fp == 'no match found':
+            continue
+        tls_id = extractTLSID(pred)
+        acc_csv = output_dir + '/' + pred[:-4] + '_accuracy.csv'
+        if os.path.exists(acc_csv):
+            print('Skipping', tls_id, '...')
+            continue
+        inputs = [pred_fp, obs_fp, acc_csv]
+        q.put(inputs)
+    workers = Pool(num_workers, accuracyQueue,(q,))
+    workers.close()
+    workers.join()
+
+def accuracyQueue(q):
+    while not q.empty():
+        try:
+            inputs = q.get()
+            pred_fp = inputs[0]
+            obs_fp = inputs[1]
+            acc_csv = inputs[2]
+            obs_df = gpd.read_file(obs_fp)
+            pred_df = pd.read_csv(pred_fp)
+            detectionAccuracyRF(obs_df, pred_df, acc_csv)
+        except ValueError as val_error:
+            print(val_error)
+        except Exception as error:
+            print(error)
 
 def accuracyOnDir(pred_dir, obs_dir, output_dir, pred_target='.csv', obs_target='.shp', overwrite=False):
     for pred in sorted(os.listdir(pred_dir)):

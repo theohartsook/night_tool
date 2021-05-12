@@ -209,3 +209,11 @@ def polyMasks(input_shp, img_path, output_dir):
             poly = row.geometry
             masked_img, aff_tran = rasterio.mask.mask(data, [poly], crop=True)
             # save some stuff here
+
+def pointsToGeoDataFrame(input_df, buffer_col=None, x='x', y='y', epsg_code='EPSG:3310'):
+    gdf = gpd.GeoDataFrame(input_df, geometry=gpd.points_from_xy(input_df.x, input_df.y))
+    gdf.crs = epsg_code
+    if buffer_col is not None:
+        gdf['geometry'] = gdf.buffer(distance=gdf[buffer_col])
+
+    return gdf

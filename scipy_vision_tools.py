@@ -30,17 +30,19 @@ def applySegmentationSteps(input_img, input_mode, output_root, save_intermediate
     :rtype: int
     """
 
+    np_img = loadImage(input_img)
+
     if save_intermediate == False:
         np_dist = getDistanceRaster(input_img, input_mode=input_mode)
         np_ridge = ridgeDetection(np_dist, 'np', method='meijering', black_ridges=False)
         np_blobs = connectedComponentsImage(np_ridge, 'np', output_path=output_root + '_blobs.tif')
-        exportBlobs(input_img, np_blobs, 'np', output_root)
+        exportBlobs(np_img, np_blobs, 'np', output_root)
         plt.imsave(output_root + 'blobs_cmap.png', np_blobs, cmap='nipy_spectral')
     else:
         np_dist = getDistanceRaster(input_img, input_mode=input_mode, output_path=output_root + '_distance.tif')
         np_ridge = ridgeDetection(np_dist, 'np', method='meijering', black_ridges=False, output_path=output_root + '_ridge.tif')
         np_blobs = connectedComponentsImage(np_ridge, 'np', output_path=output_root + '_blobs.tif')
-        exportBlobs(input_img, np_blobs, 'np', output_root)
+        exportBlobs(np_img, np_blobs, 'np', output_root)
         plt.imsave(output_root + 'blobs_cmap.png', np_blobs, cmap='nipy_spectral')
 
     if os.path.exists(output_root + 'blobs_tif'):
@@ -312,6 +314,7 @@ def exportBlobs(input_img, input_blobs, input_mode, output_root):
         print("i", i)
         print("group", group_counter)
         single_blob = np.where(np_blobs == i, True, False)
+
         base_out = single_blob*np_img
         blob_out = single_blob*np_blobs
         trimmed_blob_out = trim2DArray(blob_out)

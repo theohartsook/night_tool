@@ -6,6 +6,103 @@ import shutil
 import pandas as pd
 
 from sklearn import model_selection
+from multiprocessing import Pool, Process, Queue
+
+def heightMatchOnDir(base_dir, comp_dir, output_dir, comp_height, max_dist=0.5, max_diff=0.5):
+    for i in sorted(os.listdir(base_dir)):
+        input_csv = base_dir + '/' + i
+        comp_csv = matchTLS(i, comp_dir, target='.csv')
+        if comp_csv == 'no match found':
+            continue
+        input_df = pd.read_csv(input_csv)
+        comp_df = pd.read_csv(comp_csv)
+        print(input_csv, comp_csv)
+        output_csv = output_dir + '/' + i
+        output_df = matchAtDifferentHeights(input_df, comp_df, comp_height, max_dist=max_dist, max_diff=max_diff)
+        output_df.to_csv(output_csv, index=False)
+
+def heightMatchQueue(q, comp_height, max_dist, max_diff):
+    while not q.empty():
+        try:
+            inputs = q.get()
+            input_csv = inputs[0]
+            comp_csv = inputs[1]
+            output_csv = inputs[2]
+            input_df = pd.read_csv(input_csv)
+            comp_df = pd.read_csv(comp_csv)
+            output_df = matchAtDifferentHeights(input_df, comp_df, comp_height, max_dist=max_dist, max_diff=max_diff)
+            output_df.to_csv(output_csv, index=False)  
+        except ValueError as val_error:
+            print(val_error)
+        except Exception as error:
+            print(error)
+
+def heightMatchOnDirMP(base_dir, comp_dir, output_dir, comp_height, max_dist=0.5, max_diff=0.5, num_workers=8):
+    q = Queue()
+    for i in sorted(os.listdir(base_dir)):
+        input_csv = base_dir + '/' + i
+        comp_csv = matchTLS(i, comp_dir, target='.csv')
+        if comp_csv == 'no match found':
+            continue
+        output_csv = output_dir + '/' + i
+        inputs = [input_csv, comp_csv, output_csv]
+        q.put(inputs)
+    workers = Pool(num_workers, heightMatchQueue,(q, comp_height, max_dist, max_diff))
+    workers.close()
+    workers.join()
+
+def matchAtDifferentHeights(base_df, comp_df, comp_height, max_dist=0.5, max_diff=0.5):
+    header = list(base_df)
+    uid = str(comp_height) + '_uid'
+    height_weight = str(comp_height) + '_weight'
+    height_inner = str(comp_height) + '_inner'
+    height_outer = str(comp_height) + '_outer'
+    height_core = str(comp_height) + '_core'
+    delta_xy = str(comp_height) + '_xy_dist'
+    delta_r = str(comp_height) + '_r_diff'
+    new_cols = [uid, height_weight, height_inner, height_outer, height_core, delta_xy, delta_r]
+    header.extend(new_cols)
+    match_df = base_df.reindex(columns=header)
+    for index1, row1 in match_df.iterrows():
+        x1 = row1['x']
+        y1 = row1['y']
+        r1 = row1['r']
+        best_match = 0
+        best_sim = 100
+        shortest_dist = 0
+        smallest_diff = 0
+
+        sub_df = comp_df[(comp_df['x'] <= x1+max_dist) & (comp_df['x'] >= x1-max_dist)]
+        sub_df = sub_df[(sub_df['y'] <= y1+max_dist) & (sub_df['y'] >= y1-max_dist)]
+
+        for index2, row2 in sub_df.iterrows():
+            x2 = row2['x']
+            y2 = row2['y']
+            r2 = row2['r']
+            dist = euclidDist(x2, y2, x1, y1)
+            diff = abs(r2 - r1)
+            sim = (dist + diff)
+            if sim < best_sim:
+                best_sim = sim
+                best_match = row2['uid']
+                shortest_dist = dist  
+                smallest_diff = diff   
+                weight = row2['weight']
+                inner = row2['inner']
+                outer = row2['outer']
+                core = row2['core']
+            else:
+                continue
+
+        if best_match != 0:
+            match_df.loc[index1, uid] = best_match
+            match_df.loc[index1, delta_xy] = shortest_dist
+            match_df.loc[index1, delta_r] = smallest_diff
+            match_df.loc[index1, height_weight] = weight
+            match_df.loc[index1, height_inner] = inner
+            match_df.loc[index1, height_outer] = outer
+            match_df.loc[index1, height_core] = core
+    return match_df     
 
 def matchTLS(input_file, target_dir, target='.tif'):
     """ This is a convenience function to match two files linked by TLS ID.
@@ -226,3 +323,12 @@ def parseID(uid):
     tree_id = info[2]
 
     return plot, height, tree_id
+
+def mergeCSVs(input_dir, output_csv):
+    target_csvs = os.listdir(input_dir)
+    df_list = []
+    for i in target_csvs:
+        input_csv = input_dir + '/' + i
+        df_list.append(pd.read_csv(input_csv))
+    merged_df = pd.concat(df_list)
+    merged_df.to_csv(output_csv, index=False)
